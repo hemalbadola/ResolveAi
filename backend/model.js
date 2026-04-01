@@ -1,13 +1,4 @@
-/**
- * ResolveAI Classification Engine
- * 
- * 3-Tier Fallback Architecture:
- *   1. NVIDIA NIM API (cloud LLM - primary)
- *   2. Local LLM (OpenAI-compatible - secondary)
- *   3. Keyword-based heuristics (zero-dependency - tertiary)
- */
 const pdfParse = require('pdf-parse');
-
 const VALID_CATEGORIES = [
   'Billing Issue',
   'Technical Issue',
