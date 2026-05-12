@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Complaint Management - The System</title>
+    <meta name="description" content="An intelligent complaint management system routing issues instantly with AI telemetry.">
+    <meta property="og:title" content="Command Center AI System">
+    <meta property="og:description" content="Resolve academic friction instantly with our AI-driven routing layer.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F766E',
+                        'primary-light': '#14B8A6',
+                        'deep-bg': '#050814'
+                    },
+                    fontFamily: {
+                        heading: ['Cinzel', 'serif'],
+                        body: ['Josefin Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Josefin Sans', sans-serif; background-color: #050814; color: #F8FAFC; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="selection:bg-primary-light selection:text-white">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 z-[100]">Skip to main content</a>
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b-0 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="text-2xl font-bold tracking-widest text-slate-100 uppercase">SYS_CORE</div>
+            <div class="space-x-4 flex items-center">
+                <a href="status.html" class="px-5 py-3 inline-flex items-center text-primary-light hover:text-white transition-colors uppercase tracking-widest text-sm font-semibold">
+                    <i data-lucide="activity" class="w-4 h-4 mr-2"></i> Public Status
+                </a>
+                <a href="login.html" class="px-5 py-3 min-w-[44px] min-h-[44px] inline-flex items-center text-slate-300 hover:text-white transition-colors uppercase tracking-widest text-sm font-semibold">Login</a>
+                <a href="register.html" class="px-5 py-3 min-w-[44px] min-h-[44px] inline-flex items-center bg-primary/20 text-primary-light border border-primary/50 hover:bg-primary/40 transition-colors uppercase tracking-widest text-sm font-semibold">Join System</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Narrative Section: The Hook -->
+    <section class="min-h-screen flex items-center pt-20 relative">
+        <!-- Visual tension background -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,_rgba(20,184,166,0.1),_transparent_40%)] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(3,105,161,0.1),_transparent_40%)] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full flex flex-col md:flex-row items-center relative z-20" id="main-content">
+            <div class="w-full md:w-1/2 flex flex-col justify-center items-start">
+                <div class="mb-4 inline-flex items-center px-4 py-2 bg-slate-800/50 border border-slate-700 text-slate-400 text-xs font-bold tracking-[0.2em] uppercase">
+                    <span class="w-1.5 h-1.5 bg-primary-light rounded-full mr-2 animate-pulse"></span>
+                    Terminal v2.4 Active
+                </div>
+                <h1 class="text-[clamp(2.5rem,5vw,5rem)] tracking-tight font-bold mb-6 leading-none text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                    Resolving.<br>Before You<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-blue-400">Notice.</span>
+                </h1>
+                <p class="text-xl text-slate-400 mb-10 max-w-prose leading-relaxed font-light">
+                    The institutional backend is broken. Manual queues destroy trust. We inject an AI intelligence layer to categorize, route, and resolve friction instantly.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="register.html" class="px-8 py-4 min-w-[44px] min-h-[44px] inline-flex justify-center items-center bg-primary text-white hover:bg-primary-light transition-colors uppercase tracking-widest font-semibold group shadow-[0_0_20px_rgba(15,118,110,0.4)]">
+                        Initiate Complaint
+                        <svg class="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" aria-hidden="true" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2 mt-20 md:mt-0 z-10 p-10">
+                <!-- Data Visual Abstraction -->
+                <div class="glass-panel p-8 relative">
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-primary-light/20 blur-xl rounded-full"></div>
+                    <div class="space-y-4 font-mono text-sm text-slate-400">
+                        <div class="flex justify-between border-b border-slate-700/50 pb-2">
+                            <span class="text-teal-400">[SYSTEM]</span> <span>Analyzing input telemetry...</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700/50 pb-2">
+                            <span class="text-orange-400">[AI CORE]</span> <span>Sentiment: FRUSTRATED. Priority: HIGH.</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700/50 pb-2">
+                            <span class="text-teal-400">[ROUTER]</span> <span>Category: INFRASTRUCTURE. Directing to IT Ops.</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700/50 pb-2">
+                            <span class="text-blue-400">[DUPE-CHECK]</span> <span>Flag: False. Net-new issue registered.</span>
+                        </div>
+                        <div class="pt-2 text-emerald-400 font-bold opacity-0 animate-[fade-in_1s_ease-out_2s_forwards]">
+                            <span class="mr-2">✓</span> SLA Contract Established: 24h
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

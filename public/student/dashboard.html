@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Terminal - Complaint System</title>
+    <meta name="description" content="Submit and track your institutional friction logs.">
+    <meta property="og:title" content="Student Terminal">
+    <meta property="og:description" content="AI Assisted Issue Resolution">
+    <meta property="og:type" content="website">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F766E', // Teal 700
+                        'primary-light': '#14B8A6',
+                        'deep-bg': '#0B1120',
+                    },
+                    fontFamily: {
+                        heading: ['Cinzel', 'serif'],
+                        body: ['Josefin Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Josefin Sans', sans-serif; background-color: #050814; color: #F8FAFC; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        .data-mono { font-family: 'Fira Code', monospace; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(20, 184, 166, 0.3); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(20, 184, 166, 0.8); }
+
+        .slide-up { animation: slideUp 0.4s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900 selection:bg-primary-light selection:text-white pb-20">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 z-[100]">Skip to main content</a>
+    <!-- Top Navigation -->
+    <header class="h-16 border-b border-slate-800 bg-[#0B1120] flex items-center justify-between px-6 z-20 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center">
+            <i data-lucide="shield" class="text-primary-light mr-3 w-6 h-6"></i>
+            <h1 class="text-xl font-bold tracking-widest text-slate-100">STUDENT_PORTAL</h1>
+        </div>
+        <div class="flex items-center space-x-6">
+            <span id="user-greeting" class="text-slate-400 font-medium text-sm hidden md:block"></span>
+            <button onclick="logout()" class="text-sm text-red-400 hover:text-red-300 transition-colors uppercase tracking-widest font-semibold flex items-center">
+                <i data-lucide="power" class="w-4 h-4 mr-2"></i> Exit
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#050814] to-[#050814]">
+        
+        <!-- Left: Submission Form (Command Input) -->
+        <section class="w-full md:w-1/3 lg:w-1/4 min-w-[320px] border-r border-slate-800/50 p-6 flex flex-col overflow-y-auto z-10 glass-panel">
+            <h2 class="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center">
+                <i data-lucide="terminal" class="w-5 h-5 mr-2 text-primary-light"></i> File Issue
+            </h2>
+            
+            <form id="complaint-form" class="flex-1 flex flex-col">
+                <div class="space-y-5">
+                    <div>
+                        <label for="title" class="block text-xs text-slate-400 mb-1 tracking-wider uppercase font-semibold">Incident Title</label>
+                        <input type="text" id="title" required placeholder="e.g. Projector broken in C-204" class="w-full min-h-[44px] bg-slate-900/50 border border-slate-700/50 focus:border-primary rounded-none px-4 py-3 text-slate-200 outline-none transition-colors placeholder:text-slate-600">
+                    </div>
+                    <div>
+                        <label for="description" class="block text-xs text-slate-400 mb-1 tracking-wider uppercase font-semibold">Detailed Log</label>
+                        <textarea id="description" rows="4" placeholder="Specify exact location, impact, and time..." class="w-full min-h-[44px] bg-slate-900/50 border border-slate-700/50 focus:border-primary rounded-none px-4 py-3 text-slate-200 outline-none transition-colors resize-y placeholder:text-slate-600"></textarea>
+                    </div>
+                    <div>
+                        <label for="pdfAttachment" class="block text-xs text-slate-400 mb-1 tracking-wider uppercase font-semibold">Attach Evidence (PDF Only)</label>
+                        <input type="file" id="pdfAttachment" accept=".pdf" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-light transition-colors bg-slate-900/50 border border-slate-700/50">
+                        <p class="text-[10px] text-slate-500 mt-1">AI will automatically extract and analyze text from the PDF.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 mt-auto">
+                    <div id="ai-feedback" class="hidden mb-4 p-4 border text-sm glass-panel side-up">
+                        <!-- AI feedback injected here -->
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="w-full py-4 min-h-[44px] bg-primary hover:bg-primary-light text-white uppercase tracking-widest text-sm font-bold transition-all disabled:opacity-50 flex justify-center items-center shadow-[0_0_15px_rgba(15,118,110,0.2)]">
+                        <span>Execute Submission</span>
+                        <i data-lucide="send" class="w-4 h-4 ml-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                        <span id="spinner" class="hidden ml-3 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Right: Active Tracking -->
+        <section class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold uppercase tracking-widest text-white mb-2">Terminal Access</h1>
+                        <p class="text-slate-400 font-light mb-8 max-w-prose">Initiate ticket, track routing telemetry, and interact with the AI logic.</p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <button onclick="fetchMyComplaints()" class="text-primary-light hover:text-white transition-colors" title="Refresh">
+                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-4" id="complaints-list">
+                    <!-- Populated via JS -->
+                    <div class="p-8 text-center text-slate-500 glass-panel">
+                        <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i>
+                        Syncing ledger...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Check auth
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        if (!token || !userStr) window.location.href = '../login.html';
+        
+        const user = JSON.parse(userStr);
+        document.getElementById('user-greeting').innerText = `Entity: ${user.name}`;
+
+        // Fetch user's complaints
+        async function fetchMyComplaints() {
+            try {
+                const res = await fetch(`${window.API_BASE_URL}/complaints?limit=50&sort=-createdAt`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                renderComplaints(data.complaints);
+            } catch (err) {
+                console.error("Failed to load complaints", err);
+            }
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'resolved': return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+                case 'in-progress': return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+                case 'rejected': return 'text-red-400 border-red-500/30 bg-red-500/10';
+                default: return 'text-amber-500 border-amber-500/30 bg-amber-500/10'; // pending
+            }
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+        }
+
+        function renderComplaints(complaints) {
+            const list = document.getElementById('complaints-list');
+            list.innerHTML = '';
+            
+            if (!complaints.length) {
+                list.innerHTML = `
+                    <div class="p-12 text-center text-slate-500 glass-panel border border-slate-800 border-dashed">
+                        <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
+                        <p>No active telemetry records found.</p>
+                        <p class="text-sm mt-2 opacity-70">Use the terminal to file an issue.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            complaints.forEach((c, index) => {
+                const statusClass = getStatusColor(c.status);
+                const delay = index * 0.05;
+                
+                let dupBadge = '';
+                if (c.duplicateOf) {
+                    dupBadge = `<span class="ml-2 px-2 py-0.5 border border-purple-500/30 text-purple-400 bg-purple-500/10 text-xs font-semibold rounded" title="Merged with similar issue">MERGED</span>`;
+                }
+
+                const html = `
+                    <div class="glass-panel p-5 transition-all hover:border-slate-600 slide-up" style="animation-delay: ${delay}s">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1 ${statusClass} text-xs font-semibold uppercase tracking-wider rounded border mr-3">
+                                    ${c.status}
+                                </span>
+                                <span class="text-sm data-mono text-slate-400">#${c._id.substring(c._id.length-6).toUpperCase()}</span>
+                            </div>
+                            <span class="text-xs data-mono text-slate-500">${formatDate(c.createdAt)}</span>
+                        </div>
+                        
+                        <h3 class="text-lg font-medium text-white mb-2 leading-tight">${c.title} ${dupBadge}</h3>
+                        
+                        <div class="flex items-center text-xs mt-4">
+                            <div class="flex items-center text-slate-400 mr-6">
+                                <i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 opacity-70"></i>
+                                ${c.category}
+                            </div>
+                            <div class="flex items-center text-slate-400">
+                                <i data-lucide="zap" class="w-3.5 h-3.5 mr-1.5 opacity-70"></i>
+                                Priority Lvl ${c.priority}
+                            </div>
+                            ${c.adminNotes ? `<div class="ml-auto flex items-center text-primary-light"><i data-lucide="message-square" class="w-3.5 h-3.5 mr-1.5"></i> Admin Note</div>` : ''}
+                        </div>
+                        
+                        ${c.aiReply && !c.adminNotes ? `
+                            <div class="mt-4 p-3 bg-slate-800/50 border-l-2 border-emerald-500 text-sm text-slate-300">
+                                <strong class="text-emerald-400"><i data-lucide="bot" class="inline w-3.5 h-3.5 mr-1"></i>System Auto-Reply:</strong> ${c.aiReply}
+                            </div>
+                        ` : ''}
+                        
+                        ${c.adminNotes ? `
+                            <div class="mt-4 p-3 bg-slate-900/80 border-l-2 border-primary-light text-sm text-slate-300">
+                                <strong class="text-white">Admin Response:</strong> ${c.adminNotes}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                list.insertAdjacentHTML('beforeend', html);
+            });
+            lucide.createIcons();
+        }
+
+        // Handle Submission
+        document.getElementById('complaint-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const spinner = document.getElementById('spinner');
+            const feedbackBox = document.getElementById('ai-feedback');
+            
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            feedbackBox.classList.add('hidden');
+            
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const pdfFile = document.getElementById('pdfAttachment').files[0];
+
+            if (!title || (!description && !pdfFile)) {
+                alert("Please provide a title and either a description or a PDF attachment.");
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            if (pdfFile) formData.append('pdfAttachment', pdfFile);
+
+            try {
+                const res = await fetch(`${window.API_BASE_URL}/complaints`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }, // Removed Content-Type, browser sets multipart/form-data boundary
+                    body: formData
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    const c = data.complaint;
+                    
+                    // Show AI Routing feedback
+                    let dupMsg = c.duplicateOf ? `<p class="mt-2 text-purple-400"><i data-lucide="git-merge" class="inline w-3 h-3 mr-1"></i> Marked as duplicate of active issue. Priority bumped.</p>` : '';
+                    
+                    feedbackBox.className = 'mb-4 p-4 border border-emerald-500/30 bg-emerald-500/10 text-emerald-100 text-sm glass-panel slide-up';
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-start">
+                            <i data-lucide="check-circle" class="mr-2 w-5 h-5 text-emerald-400 flex-shrink-0"></i>
+                            <div>
+                                <strong class="block text-emerald-400">Transmission Successful</strong>
+                                AI Routed to: <strong>${c.category}</strong> (Confidence: ${c.aiConfidence <= 1 ? Math.round(c.aiConfidence * 100) : c.aiConfidence}%)
+                                ${dupMsg}
+                            </div>
+                        </div>
+                    `;
+                    feedbackBox.classList.remove('hidden');
+                    lucide.createIcons();
+                    
+                    // Reset form
+                    document.getElementById('title').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('pdfAttachment').value = '';
+                    
+                    // Refresh list
+                    fetchMyComplaints();
+                    
+                    // Auto-hide feedback after 8s
+                    setTimeout(() => { if (!btn.disabled) feedbackBox.classList.add('hidden'); }, 8000);
+                } else {
+                    feedbackBox.className = 'mb-4 p-4 border border-red-500/30 bg-red-500/10 text-red-100 text-sm glass-panel slide-up';
+                    feedbackBox.innerHTML = `<strong>Error:</strong> ${data.message}`;
+                    feedbackBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                feedbackBox.className = 'mb-4 p-4 border border-red-500/30 bg-red-500/10 text-red-100 text-sm glass-panel slide-up';
+                feedbackBox.innerHTML = `<strong>Error:</strong> Central router offline.`;
+                feedbackBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../login.html';
+        }
+
+        // Boot
+        fetchMyComplaints();
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+id,text,category
+1,"The projector in C-204 has been broken for 3 weeks. Students can't see presentations during lectures.",Technical
+2,"WiFi in the library keeps disconnecting every 10 minutes. We can't do research online.",Technical
+3,"Lab computers in room B-102 are running Windows XP and crash constantly during coding assignments.",Technical
+4,"The campus website is down and we can't access our assignment portal.",Technical
+5,"Printer in computer lab not working. Error message says 'offline' but it's turned on.",Technical
+6,"The exam results for Data Structures are wrong. My internal marks are not reflected.",Academic
+7,"Dr. Sharma hasn't taken a single lecture in 4 weeks. We're behind on the syllabus.",Academic
+8,"The mid-semester exam schedule overlaps with two subjects on the same day.",Academic
+9,"Course registration portal is showing wrong electives for 3rd year CSE students.",Academic
+10,"Attendance marked wrong for the entire batch on March 15. We all attended the lecture.",Academic
+11,"Hostel room 208-B has a broken window. Cold air comes in at night and we can't sleep.",Hostel
+12,"Mess food quality is extremely poor. Found insects in the dal yesterday.",Hostel
+13,"Hot water supply in Block C has been stopped for the past week. Very inconvenient.",Hostel
+14,"My roommate plays loud music until 2 AM. Warden doesn't take action.",Hostel
+15,"The hostel mess timing is too short. Working students miss dinner regularly.",Hostel
+16,"The boys' washroom on 2nd floor of Block A has been leaking for a month.",Infrastructure
+17,"Classroom chairs in Room 301 are broken. Only 20 out of 40 are usable.",Infrastructure
+18,"No drinking water available near the science block. Water cooler broken.",Infrastructure
+19,"The parking area near the main gate is flooded every time it rains.",Infrastructure
+20,"Electricity goes out in Block D every evening between 6-8 PM during peak study hours.",Infrastructure
+21,"Fee receipt from last semester not issued yet. Accounts office says check later.",Administrative
+22,"My ID card was lost 2 months ago. New card application still pending.",Administrative
+23,"Library late fee wrongly charged. I returned the book on time but system shows different date.",Administrative
+24,"Transfer certificate request submitted 3 weeks ago. Still no response from admin office.",Administrative
+25,"Scholarship amount not credited for this semester. Other students received it already.",Administrative
+26,"The air conditioning in the auditorium never works during events. Very uncomfortable.",Infrastructure
+27,"Can't access LMS platform. Shows authentication error even with correct credentials.",Technical
+28,"The chemistry lab is missing safety equipment. No fire extinguisher or first aid kit.",Infrastructure
+29,"Final year project guide not assigned yet. Submission deadline is next month.",Academic
+30,"Mess serves the same menu every week. No variety in food options at all.",Hostel
+31,"College bus timing changed without notice. Many students missed their morning classes.",Administrative
+32,"Sports ground is not maintained. Cricket pitch has holes and the football field has no grass.",Infrastructure
+33,"Internship cell is not responding to emails about placement drive schedule.",Administrative
+34,"Lab equipment in physics lab is outdated. Experiments can't be performed accurately.",Academic
+35,"Gate pass system is too slow. Takes 30 minutes to get a pass for going home.",Administrative
+36,"Noise from construction near the hostel is disturbing sleep and study time.",Hostel
+37,"The university app crashes every time I try to check my timetable.",Technical
+38,"No proper lighting on the path between hostel and academic block after 7 PM.",Infrastructure
+39,"Marks uploaded for wrong subject. My Machine Learning marks show under Databases.",Academic
+40,"Canteen prices increased by 30% without any notice or improvement in quality.",Administrative
+41,"Bathroom doors in girls' hostel don't have proper locks. Safety concern.",Hostel
+42,"Student council election process is not transparent. Results seem manipulated.",Administrative
+43,"AC not working in server room causing equipment to overheat frequently.",Technical
+44,"My semester grade card has a typo in my name. Correction request pending for months.",Administrative
+45,"Pest control not done in hostel Block B. Cockroach infestation in common areas.",Hostel
+46,"Network cable in lab 305 is damaged. Half the computers have no internet.",Technical
+47,"Emergency exit doors in main building are locked from outside during classes.",Infrastructure
+48,"Practical exam viva dates not announced. Students can't plan preparation.",Academic
+49,"Rain water leaking through ceiling in lecture hall 201. Damages notes and laptops.",Infrastructure
+50,"Hostel curfew timings too strict. Can't attend evening library sessions.",Hostel

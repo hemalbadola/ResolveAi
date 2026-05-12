@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SYS_CORE</title>
+    <meta name="description" content="Authenticate your entity to access the AI Complaint Management network.">
+    <meta property="og:title" content="Login Sys Core">
+    <meta property="og:description" content="Secure terminal access login.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #050814; color: #F8FAFC; font-family: 'Josefin Sans', sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050814] to-[#050814]">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-teal-500 text-white px-4 py-2 z-[100]">Skip to main content</a>
+    <div id="main-content" class="glass-panel p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
+        <!-- Accent line -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-600 to-teal-400"></div>
+        
+        <h2 class="text-2xl font-bold uppercase tracking-widest mb-6 text-center text-slate-200">Auth / Login</h2>
+        
+        <form id="login-form" class="space-y-5">
+            <div>
+                <label for="email" class="block text-sm text-slate-400 mb-1 tracking-wider uppercase font-semibold">Email ID</label>
+                <input type="email" id="email" required class="w-full min-h-[44px] bg-slate-900/80 border border-slate-700 focus:border-teal-500 rounded-none px-4 py-3 text-slate-200 outline-none transition-colors">
+            </div>
+            <div>
+                <label for="password" class="block text-sm text-slate-400 mb-1 tracking-wider uppercase font-semibold">Security Token (Password)</label>
+                <input type="password" id="password" required class="w-full min-h-[44px] bg-slate-900/80 border border-slate-700 focus:border-teal-500 rounded-none px-4 py-3 text-slate-200 outline-none transition-colors">
+            </div>
+            <div id="error-msg" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-900/50 p-2 text-center"></div>
+            
+            <button type="submit" id="submit-btn" class="w-full py-4 min-h-[44px] bg-teal-700 hover:bg-teal-600 text-white uppercase tracking-widest font-bold transition-all disabled:opacity-50 mt-4 flex justify-center items-center">
+                <span>Authenticate</span>
+                <span id="spinner" class="hidden ml-3 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            </button>
+        </form>
+        
+        <div class="mt-8 text-center text-sm text-slate-500">
+            Unregistered entity? <a href="register.html" class="text-teal-400 hover:text-teal-300">Request Access</a>
+        </div>
+    </div>
+
+    <script src="/js/config.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const spinner = document.getElementById('spinner');
+            const errorDiv = document.getElementById('error-msg');
+            
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const res = await fetch(`${window.API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    if (data.user.role === 'admin') {
+                        window.location.href = '/admin/dashboard.html';
+                    } else {
+                        window.location.href = '/student/dashboard.html';
+                    }
+                } else {
+                    errorDiv.innerText = data.message || 'Authentication failed';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorDiv.innerText = 'Network node unreachable';
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
