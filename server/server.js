@@ -20,13 +20,22 @@ const io = new Server(server, {
   cors: { origin: '*' }
 });
 
+// Configuration Constants
+const SLA_CONFIG = {
+  P1_HOURS: parseInt(process.env.SLA_P1_HOURS) || 4,
+  P2_HOURS: parseInt(process.env.SLA_P2_HOURS) || 8,
+  P3_HOURS: parseInt(process.env.SLA_P3_HOURS) || 24,
+  DEFAULT_MAX_HOURS: parseInt(process.env.SLA_DEFAULT_HOURS) || 48
+};
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static frontend files
+// Serve static frontend files and uploads
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -72,9 +81,8 @@ setInterval(async () => {
       let newSla = c.slaStatus;
       
       // Basic SLA logic based on priority (lower priority number = more urgent)
-      // P1: Breach at 4h. P2: Breach at 8h. P3: Breach at 24h.
-      const slas = { 1: 4, 2: 8, 3: 24 };
-      const maxHours = slas[c.priority] || 48;
+      const slas = { 1: SLA_CONFIG.P1_HOURS, 2: SLA_CONFIG.P2_HOURS, 3: SLA_CONFIG.P3_HOURS };
+      const maxHours = slas[c.priority] || SLA_CONFIG.DEFAULT_MAX_HOURS;
       
       if (hoursAlive >= maxHours) {
         newSla = 'Breached';

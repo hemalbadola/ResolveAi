@@ -13,7 +13,7 @@ const complaintSchema = new mongoose.Schema({
     required: [true, 'Description is required'],
     trim: true,
     minlength: 10,
-    maxlength: 2000
+    maxlength: 20000
   },
   category: {
     type: String,
@@ -24,7 +24,7 @@ const complaintSchema = new mongoose.Schema({
     type: Number,
     min: 1,
     max: 5,
-    default: 1
+    default: 3
   },
   status: {
     type: String,
@@ -64,6 +64,10 @@ const complaintSchema = new mongoose.Schema({
   aiReply: {
     type: String,
     default: ''
+  },
+  evidenceUrl: {
+    type: String,
+    default: null
   },
   resolvedAt: {
     type: Date,

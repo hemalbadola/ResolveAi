@@ -87,9 +87,9 @@
                         <textarea id="description" rows="4" placeholder="Specify exact location, impact, and time..." class="w-full min-h-[44px] bg-slate-900/50 border border-slate-700/50 focus:border-primary rounded-none px-4 py-3 text-slate-200 outline-none transition-colors resize-y placeholder:text-slate-600"></textarea>
                     </div>
                     <div>
-                        <label for="pdfAttachment" class="block text-xs text-slate-400 mb-1 tracking-wider uppercase font-semibold">Attach Evidence (PDF Only)</label>
-                        <input type="file" id="pdfAttachment" accept=".pdf" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-light transition-colors bg-slate-900/50 border border-slate-700/50">
-                        <p class="text-[10px] text-slate-500 mt-1">AI will automatically extract and analyze text from the PDF.</p>
+                        <label for="evidenceAttachment" class="block text-xs text-slate-400 mb-1 tracking-wider uppercase font-semibold">Attach Evidence (Photo)</label>
+                        <input type="file" id="evidenceAttachment" accept="image/jpeg, image/png, image/webp" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-light transition-colors bg-slate-900/50 border border-slate-700/50">
+                        <p class="text-[10px] text-slate-500 mt-1">Provide clear visual evidence of the issue.</p>
                     </div>
                 </div>
                 
@@ -233,6 +233,14 @@
                                 <strong class="text-white">Admin Response:</strong> ${c.adminNotes}
                             </div>
                         ` : ''}
+
+                        ${c.evidenceUrl ? `
+                            <div class="mt-4">
+                                <a href="${c.evidenceUrl}" target="_blank" class="text-xs text-primary-light hover:text-white flex items-center mt-2">
+                                    <i data-lucide="image" class="w-4 h-4 mr-1"></i> View Evidence Photo
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
                 list.insertAdjacentHTML('beforeend', html);
@@ -253,10 +261,10 @@
             
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
-            const pdfFile = document.getElementById('pdfAttachment').files[0];
+            const imageFile = document.getElementById('evidenceAttachment').files[0];
 
-            if (!title || (!description && !pdfFile)) {
-                alert("Please provide a title and either a description or a PDF attachment.");
+            if (!title || !description) {
+                alert("Please provide a title and detailed description.");
                 btn.disabled = false;
                 spinner.classList.add('hidden');
                 return;
@@ -265,7 +273,7 @@
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
-            if (pdfFile) formData.append('pdfAttachment', pdfFile);
+            if (imageFile) formData.append('evidenceAttachment', imageFile);
 
             try {
                 const res = await fetch(`${window.API_BASE_URL}/complaints`, {
@@ -299,7 +307,7 @@
                     // Reset form
                     document.getElementById('title').value = '';
                     document.getElementById('description').value = '';
-                    document.getElementById('pdfAttachment').value = '';
+                    document.getElementById('evidenceAttachment').value = '';
                     
                     // Refresh list
                     fetchMyComplaints();

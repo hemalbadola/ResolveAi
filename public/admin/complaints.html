@@ -156,9 +156,9 @@
             <div class="p-6 flex-1 overflow-y-auto space-y-6">
                 <!-- Data display blocks -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-slate-800/30 p-3 border border-slate-700/50">
+                    <div class="bg-slate-800/30 p-3 border border-slate-700/50 overflow-hidden">
                         <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">TKT-ID</span>
-                        <span id="m-id" class="data-mono text-sm text-slate-200"></span>
+                        <span id="m-id" class="data-mono text-sm text-slate-200 block truncate" title=""></span>
                     </div>
                     <div class="bg-slate-800/30 p-3 border border-slate-700/50">
                         <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Category & Conf</span>
@@ -177,6 +177,13 @@
                 <div class="bg-slate-800/30 p-5 border border-slate-700/50">
                     <h4 id="m-title" class="text-xl text-white font-medium mb-3"></h4>
                     <p id="m-desc" class="text-slate-400 text-sm whitespace-pre-wrap leading-relaxed"></p>
+                    
+                    <div id="m-evidence-container" class="mt-6 hidden">
+                        <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 border-t border-slate-800 pt-4"><i data-lucide="camera" class="w-4 h-4 inline mr-1"></i> Attached Visual Evidence</h5>
+                        <a id="m-evidence-link" href="#" target="_blank" class="block rounded border border-slate-700/50 overflow-hidden max-w-sm">
+                            <img id="m-evidence-img" src="" alt="Evidence" class="w-full h-auto object-cover hover:opacity-80 transition-opacity">
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Admin Action Zone -->
@@ -320,7 +327,11 @@
         function openModal(c) {
             currentComplaintId = c._id;
             
-            document.getElementById('m-id').innerText = '#' + c._id.toUpperCase();
+            const shortId = '#' + c._id.substring(c._id.length - 6).toUpperCase();
+            const mIdElement = document.getElementById('m-id');
+            mIdElement.innerText = shortId;
+            mIdElement.title = '#' + c._id.toUpperCase(); // Show full ID on hover
+            
             document.getElementById('m-cat').innerText = `${c.category} (${c.aiConfidence <= 1 ? Math.round(c.aiConfidence * 100) : c.aiConfidence}%)`;
             
             let sentColor = c.sentiment === 'Angry' || c.sentiment === 'Urgent' ? 'text-red-400' : 'text-slate-300';
@@ -331,6 +342,15 @@
             
             document.getElementById('m-title').innerText = c.title;
             document.getElementById('m-desc').innerText = c.description;
+            
+            const evidenceContainer = document.getElementById('m-evidence-container');
+            if (c.evidenceUrl) {
+                document.getElementById('m-evidence-link').href = c.evidenceUrl;
+                document.getElementById('m-evidence-img').src = c.evidenceUrl;
+                evidenceContainer.classList.remove('hidden');
+            } else {
+                evidenceContainer.classList.add('hidden');
+            }
             
             document.getElementById('m-status-select').value = c.status;
             document.getElementById('m-notes').value = c.adminNotes || '';

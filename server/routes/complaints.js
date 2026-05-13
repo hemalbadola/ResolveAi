@@ -6,44 +6,53 @@ const Complaint = require('../models/Complaint');
 const { auth, adminOnly } = require('../middleware/auth');
 const { classifyComplaint, detectDuplicate } = require('../utils/nlpClient');
 
+const path = require('path');
+const fs = require('fs');
+
+// Configuration Constants
+const TRENDING_DAYS_THRESHOLD = parseInt(process.env.TRENDING_DAYS_THRESHOLD) || 7;
+const TRENDING_COUNT_THRESHOLD = parseInt(process.env.TRENDING_COUNT_THRESHOLD) || 5;
+
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '..', 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname.replace(/[^a-zA-Z0-9.]/g, '_'));
+  }
+});
+const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
 
 // POST /api/complaints — Submit a new complaint (student)
-router.post('/', auth, upload.single('pdfAttachment'), async (req, res) => {
+router.post('/', auth, upload.single('evidenceAttachment'), async (req, res) => {
   try {
     const { title } = req.body;
     let description = req.body.description || '';
 
-    if (!title || (!description && !req.file)) {
-      return res.status(400).json({ message: 'Title and either description or PDF attachment are required' });
+    if (!title || !description.trim()) {
+      return res.status(400).json({ message: 'Title and detailed description are required for AI categorization.' });
     }
 
-    // If PDF uploaded, extract text via Python service
-    if (req.file && req.file.mimetype === 'application/pdf') {
-      try {
-        const form = new FormData();
-        form.append('file', req.file.buffer, req.file.originalname);
-
-        const pdfRes = await axios.post(`${process.env.PYTHON_SERVICE_URL || 'http://localhost:8000'}/parse-pdf`, form, {
-          headers: { ...form.getHeaders() }
-        });
-
-        if (pdfRes.data.text) {
-          description += `\n\n[Extracted from attached PDF]:\n${pdfRes.data.text}`;
-        }
-      } catch (err) {
-        console.error('PDF parsing failed:', err.message);
-        // Continue with whatever description was provided manually
-      }
-    }
-
-    if (!description.trim()) {
-      return res.status(400).json({ message: 'Could not extract any text from PDF and no description was provided.' });
+    let evidenceUrl = null;
+    if (req.file) {
+      evidenceUrl = `/uploads/${req.file.filename}`;
     }
 
     // AI classification
     const classification = await classifyComplaint(description);
+    
+    // Determine priority based on AI Sentiment
+    let basePriority = 4; // Default Neutral
+    if (classification.sentiment === 'Urgent') basePriority = 1;
+    else if (classification.sentiment === 'Angry') basePriority = 2;
+    else if (classification.sentiment === 'Frustrated') basePriority = 3;
 
     // Create complaint
     const complaint = await Complaint.create({
@@ -53,6 +62,8 @@ router.post('/', auth, upload.single('pdfAttachment'), async (req, res) => {
       aiConfidence: classification.confidence || 0,
       sentiment: classification.sentiment || 'Neutral',
       aiReply: classification.reply_message || '',
+      evidenceUrl: evidenceUrl,
+      priority: basePriority,
       slaStatus: 'On-Track',
       submittedBy: req.user._id
     });
@@ -62,7 +73,8 @@ router.post('/', auth, upload.single('pdfAttachment'), async (req, res) => {
       .then(async (dupResult) => {
         if (dupResult.is_duplicate && dupResult.similar_to) {
           complaint.duplicateOf = dupResult.similar_to;
-          complaint.priority = Math.min(complaint.priority + 2, 5);
+          // Duplicate -> lower priority (higher number)
+          complaint.priority = Math.min(complaint.priority + 1, 5);
           await complaint.save();
         }
       })
@@ -71,11 +83,12 @@ router.post('/', auth, upload.single('pdfAttachment'), async (req, res) => {
     // Check for frequent similar category complaints — boost priority
     const recentSimilar = await Complaint.countDocuments({
       category: complaint.category,
-      createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
+      createdAt: { $gte: new Date(Date.now() - TRENDING_DAYS_THRESHOLD * 24 * 60 * 60 * 1000) }
     });
 
-    if (recentSimilar > 5) {
-      complaint.priority = Math.min(complaint.priority + 1, 5);
+    if (recentSimilar > TRENDING_COUNT_THRESHOLD) {
+      // Trending issue -> boost priority (lower number)
+      complaint.priority = Math.max(complaint.priority - 1, 1);
       await complaint.save();
     }
 

@@ -1,3 +1,4 @@
-// Global Configuration
-window.API_BASE_URL = 'http://localhost:3000/api';
-window.PYTHON_SERVICE_URL = 'http://localhost:8000';
+// Global Configuration - Dynamically resolved based on host
+window.API_BASE_URL = window.location.origin.includes('localhost') 
+    ? 'http://localhost:3000/api' 
+    : window.location.origin + '/api';
