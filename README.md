@@ -1,24 +1,24 @@
-# 🛡️ SYS_CORE — AI Complaint Categorization System
+# ResolveAI — AI Complaint Categorization System
 
 An AI-powered complaint management platform for educational institutions. Students submit complaints, AI automatically classifies them into departments (Academic, Technical, Hostel, Infrastructure, Administrative), detects duplicates, and admins manage everything through a real-time dashboard.
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---------|-------------|
-| 🤖 **AI Classification** | NVIDIA API (Llama 3.1) auto-categorizes complaints into 5 departments with confidence scores |
-| 🔍 **Duplicate Detection** | TF-IDF + cosine similarity identifies similar complaints (threshold: 65%) |
-| 📊 **Admin Analytics** | Chart.js dashboards with trend analysis, category distribution, sentiment breakdown, SLA tracking |
-| ⚡ **Real-time Updates** | Socket.IO pushes new complaints to admin dashboard instantly |
-| 🔐 **Role-Based Access** | JWT authentication with admin/student role guards on both frontend and backend |
-| ⏱️ **SLA Monitoring** | Background cron job tracks resolution deadlines and flags breaches |
-| 😤 **Sentiment Analysis** | AI detects complaint urgency: Neutral, Frustrated, Urgent, Positive |
+| **AI Classification** | NVIDIA API (Llama 3.1) auto-categorizes complaints into 5 departments with confidence scores |
+|  **Duplicate Detection** | TF-IDF + cosine similarity identifies similar complaints (threshold: 65%) |
+|  **Admin Analytics** | Chart.js dashboards with trend analysis, category distribution, sentiment breakdown, SLA tracking |
+|  **Real-time Updates** | Socket.IO pushes new complaints to admin dashboard instantly |
+|  **Role-Based Access** | JWT authentication with admin/student role guards on both frontend and backend |
+| **SLA Monitoring** | Background cron job tracks resolution deadlines and flags breaches |
+| **Sentiment Analysis** | AI detects complaint urgency: Neutral, Frustrated, Urgent, Positive |
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────┐     ┌──────────────────────┐
@@ -45,7 +45,7 @@ An AI-powered complaint management platform for educational institutions. Studen
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 webdev project/
@@ -145,7 +145,7 @@ Navigate to **http://localhost:3000** in your browser.
 
 ---
 
-## 👥 User Roles & Login Flow
+##  User Roles & Login Flow
 
 | Role | Registration | Dashboard | Capabilities |
 |------|-------------|-----------|-------------|
@@ -161,7 +161,7 @@ Navigate to **http://localhost:3000** in your browser.
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### Authentication
 
@@ -275,6 +275,6 @@ curl -X POST http://localhost:8000/classify \
 
 ---
 
-## 📜 License
+##  License
 
 ISC
